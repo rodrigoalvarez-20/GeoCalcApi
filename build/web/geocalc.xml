@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<geocalc>
+  <users>
+    <user name="admin" last_name="" password="admin01">user@admin.com</user>
+    <user name="Rodrigo" last_name="Alvarez" password="METALLICa0125">rodrigoalvarez449@gmail.com</user>
+  </users>
+  <application />
+</geocalc>
+

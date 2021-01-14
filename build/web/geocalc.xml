@@ -3,14 +3,12 @@
   <users>
     <user name="admin" last_name="" password="admin01">user@admin.com</user>
     <user name="Rodrigo" last_name="Alvarez" password="METALLICa0125">rodrigoalvarez449@gmail.com</user>
+    <user name="Usuario" last_name="Prueba" password="123456">usuario@example.com</user>
   </users>
   <application>
     <rectas>
-      <item id="1" inp1="-5" inp2="2" sign="+" inp3="0" type="pendiente">y=-5x+2</item>
-      <item id="2" inp1="3" inp2="5" sign="-" inp3="4" type="general">3x-5y=4</item>
-      <item id="3" inp1="4" inp2="5" inp3="0" sign="+" type="pendiente">y=4x+5</item>
-      <item id="4" inp1="8" inp2="4" inp3="6" sign="+" type="general">8x+4y=6</item>
-      <item id="5" inp1="7" inp2="2" inp3="0" sign="-" type="pendiente">y=7x-2</item>
+      <item id="2" inp1="3" inp2="4" inp3="8" sign="+" type="general">3x+4y=8</item>
+      <item id="3" inp1="8" inp2="8" inp3="0" sign="-" type="[object Object]">8x-8y=0</item>
     </rectas>
   </application>
 </geocalc>

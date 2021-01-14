@@ -195,4 +195,64 @@ public class XmlHelper {
         }
     }
 
+    public boolean updateExampleItem(String id, String inp1, String inp2, String inp3, String type, String sign, String label, String section) {
+        Element edited = searchElementAndRemove(id, section);
+        if (edited == null) {
+            return false;
+        } else {
+            edited.setAttribute("inp1", inp1);
+            edited.setAttribute("inp2", inp2);
+            edited.setAttribute("inp3", inp3);
+            edited.setAttribute("sign", sign);
+            edited.setAttribute("type", type);
+            edited.setText(label);
+            try {
+                Document doc = (Document) builder.build(this.xmlFile);
+                Element root = doc.getRootElement();
+                Element appData = root.getChild("application");
+                Element sectItems = appData.getChild(section);
+                sectItems.addContent(edited);
+                XMLOutputter xmlOutput = new XMLOutputter();
+                xmlOutput.setFormat(Format.getPrettyFormat());
+                try (FileWriter writer = new FileWriter(this.path + this.fileName)) {
+                    xmlOutput.output(doc, writer);
+                    writer.flush();
+                    return true;
+                }
+            } catch (JDOMException | IOException ex) {
+                System.out.println(ex.getMessage());
+                return false;
+            }
+        }
+    }
+
+    private Element searchElementAndRemove(String id, String section) {
+        try {
+            Document document = (Document) builder.build(this.xmlFile);
+            Element rootNode = document.getRootElement();
+            Element appData = rootNode.getChild("application");
+            Element sectionItems = appData.getChild(section);
+            List items = sectionItems.getChildren();
+            Element toView = null;
+            for (Object node : items) {
+                Element elemento = (Element) node;
+                if (elemento.getAttributeValue("id").equals(id)) {
+                    toView = elemento;
+                    sectionItems.removeContent(elemento);
+                    XMLOutputter xmlOutput = new XMLOutputter();
+                    xmlOutput.setFormat(Format.getPrettyFormat());
+                    try (FileWriter writer = new FileWriter(this.path + this.fileName)) {
+                        xmlOutput.output(document, writer);
+                        writer.flush();
+                    }
+                    break;
+                }
+            }
+            return toView;
+        } catch (JDOMException | IOException ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
+    }
+
 }

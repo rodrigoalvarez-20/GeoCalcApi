@@ -60,48 +60,103 @@ public class Rectas extends HttpServlet {
         response.setContentType("application/xml");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-        String inp1 = request.getParameter("inp1");
-        String inp2 = request.getParameter("inp2");
-        String sign = request.getParameter("sign");
         String type = request.getQueryString().split("=")[1];
-        StringBuilder str = new StringBuilder();
+        StringBuilder strXml = new StringBuilder();
         int cont = 1;
-        double secValue = Double.parseDouble(inp2);
-        if (sign.equals("-")) {
-            secValue *= -1;
-        }
         switch (type) {
-            case "linear-slope":
-                str.append("<?xml version='1.0' encoding='UTF-8>");
-                str.append("<values>");
-                for (int i = -10; i <= 10; i++) {
-                    double value = Double.parseDouble(inp1) * i + secValue;
-                    str.append("<").append(cont).append(">");
-                    str.append(generateXmlTag("x", String.valueOf(i)));
-                    str.append(generateXmlTag("y", String.valueOf(value)));
-                    str.append("</").append(cont).append(">");
-                    cont++;
-                }
-                str.append("</values>");
-                outter.write(str.toString());
-                break;
-            case "linear-general":
+            case "rectas":
+                String inp1 = request.getParameter("inp1");
+                String inp2 = request.getParameter("inp2");
                 String inp3 = request.getParameter("inp3");
-                Double v1 = Double.parseDouble(inp1);
-                Double v2 = secValue;
-                Double v3 = Double.parseDouble(inp3);
-                str.append("<?xml version='1.0' encoding='UTF-8>");
-                str.append("<values>");
+                String sign = request.getParameter("sign");
+                String eqType = request.getParameter("eqType");
+                double x = Double.parseDouble(inp1);
+                double y = Double.parseDouble(inp2);
+                double c = inp3 != null ? Double.parseDouble(inp3) : 0;
+                if (sign.equals("-")) {
+                    y *= -1;
+                }
+                strXml.append("<?xml version='1.0' encoding='UTF-8>");
+                strXml.append("<values>");
                 for (int i = -10; i <= 10; i++) {
-                    double value = (-1 * v1 * i / v2) + (v3 / v2);
-                    str.append("<").append(cont).append(">");
-                    str.append(generateXmlTag("x", String.valueOf(i)));
-                    str.append(generateXmlTag("y", String.valueOf(value)));
-                    str.append("</").append(cont).append(">");
+                    double value = x * i + y;
+                    if (eqType != null && eqType.equals("general")) {
+                        value = (-x * i / y) + (c / y);
+                    }
+                    strXml.append("<").append(cont).append(">");
+                    strXml.append(generateXmlTag("x", String.valueOf(i)));
+                    strXml.append(generateXmlTag("y", String.valueOf(value)));
+                    strXml.append("</").append(cont).append(">");
                     cont++;
                 }
-                str.append("</values>");
-                outter.write(str.toString());
+                strXml.append("</values>");
+                outter.write(strXml.toString());
+                break;
+            case "interseccion":
+                String eq1inp1 = request.getParameter("eq1inp1");
+                String eq1inp2 = request.getParameter("eq1inp2");
+                String eq1inp3 = request.getParameter("eq1inp3");
+                String eq1sign = request.getParameter("eq1sign");
+                String eq2inp1 = request.getParameter("eq2inp1");
+                String eq2inp2 = request.getParameter("eq2inp2");
+                String eq2inp3 = request.getParameter("eq2inp3");
+                String eq2sign = request.getParameter("eq2sign");
+                String eqsType = request.getParameter("eqsType");
+
+                double x1 = Double.parseDouble(eq1inp1);
+                double y1 = Double.parseDouble(eq1inp2);
+                double c1 = eq1inp3 != null ? Double.parseDouble(eq1inp3) : 0;
+                if (eq1sign.equals("-")) {
+                    y1 *= -1;
+                }
+
+                double x2 = Double.parseDouble(eq2inp1);
+                double y2 = Double.parseDouble(eq2inp2);
+                double c2 = eq2inp3 != null ? Double.parseDouble(eq2inp3) : 0;
+                if (eq2sign.equals("-")) {
+                    y2 *= -1;
+                }
+                strXml.append("<?xml version='1.0' encoding='UTF-8>");
+                strXml.append("<data>");
+                for (int i = 1; i <= 2; i++) {
+                    cont = 0;
+                    strXml.append("<eq").append(i).append(">");
+                    for (int j = -10; j <= 10; j++) {
+                        double xLin = i == 1 ? x1 : x2;
+                        double yLin = i == 1 ? y1 : y2;
+                        double cLin = i == 1 ? c1 : c2;
+                        double value = xLin * j + yLin;
+                        if (eqsType != null && eqsType.equals("general")) {
+                            value = (-xLin * j / yLin) + (cLin / yLin);
+                        }
+                        strXml.append("<").append(cont).append(">");
+                        strXml.append(generateXmlTag("x", String.valueOf(j)));
+                        strXml.append(generateXmlTag("y", String.valueOf(value)));
+                        strXml.append("</").append(cont).append(">");
+                        cont++;
+                    }
+                    strXml.append("</eq").append(i).append(">");
+                }
+                //Determinantes
+                //y = mx + c  --> -mx + y = c --> -x1 + 1 = y1 -- a b c
+                //x + y = c
+                if (x1 != x2) {
+                    double xInt = (y1 * 1 - y2 * 1) / (-x1 * 1 + x2 * 1);
+                    double yInt = (-x1 * y2 + x2 * y1) / (-x1 * 1 + x2 * 1);
+                    if (eqsType != null && eqsType.equals("general")) {
+                        xInt = (c1 * y2 - c2 * y1) / (x1 * y2 - x2 * y1);
+                        yInt = (x1 * c2 - x2 * c1) / (x1 * y2 - x2 * y1);
+                    }
+                    strXml.append("<xVal>").append(String.format("%.2f", xInt)).append("</xVal>");
+                    strXml.append("<yVal>").append(String.format("%.2f", yInt)).append("</yVal>");
+                } else {
+                    strXml.append("<error>No hay interseccion</error>");
+                }
+
+                strXml.append("</data>");
+                outter.write(strXml.toString());
+                break;
+            case "par-perp":
                 break;
             default:
                 outter.write(xmlResponse("message", "Aun no soportado"));
@@ -145,14 +200,20 @@ public class Rectas extends HttpServlet {
         String section = request.getParameter("section");
         String isForAdd = request.getParameter("isForAdd");
         if (isForAdd != null) {
-            //Actualizar dato
-        } else {
-            //Añadir un nuevo dato
+            //Añadir dato
             if (helper.addExampleItem(id, inp1, inp2, inp3, type, sign, text, section)) {
                 outter.write(xmlResponse("message", "Se ha agregado correctamente"));
             } else {
                 outter.write(xmlResponse("error", "Ha ocurrido un error al agregar el item"));
             }
+        } else {
+            //Actualizar dato
+            if (helper.updateExampleItem(id, inp1, inp2, inp3, type, sign, text, section)) {
+                outter.write(xmlResponse("message", "Se ha actualizado correctamente"));
+            } else {
+                outter.write(xmlResponse("error", "Ha ocurrido un error al actualizar el registro"));
+            }
+
         }
     }
 

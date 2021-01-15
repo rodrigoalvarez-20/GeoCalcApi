@@ -157,6 +157,14 @@ public class Rectas extends HttpServlet {
                 outter.write(strXml.toString());
                 break;
             case "par-perp":
+                String eqInp1 = request.getPara;
+                String eqInp2;
+                String eqInp3;
+                String eqSign;
+                String eqP1;
+                String eqP2;
+                String lineType;
+                
                 break;
             default:
                 outter.write(xmlResponse("message", "Aun no soportado"));

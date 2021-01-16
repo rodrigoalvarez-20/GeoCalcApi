@@ -157,6 +157,7 @@ public class Rectas extends HttpServlet {
                 outter.write(strXml.toString());
                 break;
             case "par-perp":
+
                 String lininp1 = request.getParameter("inp1");
                 String lininp2 = request.getParameter("inp2");
                 String lininp3 = request.getParameter("inp3");

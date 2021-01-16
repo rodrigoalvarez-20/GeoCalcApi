@@ -8,6 +8,10 @@
         <servlet-name>Rectas</servlet-name>
         <servlet-class>Api.Rectas</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Puntos</servlet-name>
+        <servlet-class>Api.Puntos</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>user</servlet-name>
         <url-pattern>/user</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>Rectas</servlet-name>
         <url-pattern>/Rectas</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Puntos</servlet-name>
+        <url-pattern>/Puntos</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

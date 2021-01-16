@@ -157,6 +157,60 @@ public class Rectas extends HttpServlet {
                 outter.write(strXml.toString());
                 break;
             case "par-perp":
+                String lininp1 = request.getParameter("inp1");
+                String lininp2 = request.getParameter("inp2");
+                String lininp3 = request.getParameter("inp3");
+                String linsign = request.getParameter("sign");
+                String linType = request.getParameter("lineType");
+                String linX = request.getParameter("punto1");
+                String linY = request.getParameter("punto2");
+                String linEqType = request.getParameter("eqType");
+
+                Double xLin = Double.parseDouble(lininp1);
+                Double yLin = Double.parseDouble(lininp2);
+                Double cLin = Double.parseDouble(lininp3);
+                Double xLin1 = Double.parseDouble(linX);
+                Double yLin1 = Double.parseDouble(linY);
+                Double pendiente = 0.0;
+
+                if (linsign.equals("-")) {
+                    yLin *= -1;
+                }
+
+                pendiente = linEqType.equals("pendiente") ? xLin : xLin / yLin * -1;
+
+                if (linType.equals("perpendicular")) {
+                    pendiente = -1 * (1 / pendiente);
+                }
+
+                strXml.append("<?xml version='1.0' encoding='UTF-8>");
+                strXml.append("<data>");
+                strXml.append("<eq1>");
+                for (int i = -10; i <= 10; i++) {
+                    double value = xLin * i + yLin;
+                    if (linEqType.equals("general")) {
+                        value = (-xLin * i / yLin) + (cLin / yLin);
+                    }
+                    strXml.append("<").append(cont).append(">");
+                    strXml.append(generateXmlTag("x", String.valueOf(i)));
+                    strXml.append(generateXmlTag("y", String.valueOf(value)));
+                    strXml.append("</").append(cont).append(">");
+                    cont++;
+                }
+                strXml.append("</eq1>");
+                strXml.append("<eq2>");
+                for (int i = -10; i <= 10; i++) {
+                    //Y - Y1 = m(X - X1)
+                    double value = (pendiente * i) - (pendiente * xLin1) + (yLin1);
+                    strXml.append("<").append(cont).append(">");
+                    strXml.append(generateXmlTag("x", String.valueOf(i)));
+                    strXml.append(generateXmlTag("y", String.valueOf(value)));
+                    strXml.append("</").append(cont).append(">");
+                    cont++;
+                }
+                strXml.append("</eq2>");
+                strXml.append("</data>");
+                outter.write(strXml.toString());
                 break;
             default:
                 outter.write(xmlResponse("message", "Aun no soportado"));

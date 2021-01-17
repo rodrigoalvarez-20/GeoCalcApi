@@ -157,7 +157,6 @@ public class Rectas extends HttpServlet {
                 outter.write(strXml.toString());
                 break;
             case "par-perp":
-
                 String lininp1 = request.getParameter("inp1");
                 String lininp2 = request.getParameter("inp2");
                 String lininp3 = request.getParameter("inp3");
@@ -254,6 +253,7 @@ public class Rectas extends HttpServlet {
         String type = request.getParameter("type");
         String section = request.getParameter("section");
         String isForAdd = request.getParameter("isForAdd");
+        System.out.println(type);
         if (isForAdd != null) {
             //Añadir dato
             if (helper.addExampleItem(id, inp1, inp2, inp3, type, sign, text, section)) {

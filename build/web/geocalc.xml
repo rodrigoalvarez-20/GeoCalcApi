@@ -8,7 +8,9 @@
   <application>
     <rectas>
       <item id="2" inp1="3" inp2="4" inp3="8" sign="+" type="general">3x+4y=8</item>
-      <item id="3" inp1="8" inp2="8" inp3="0" sign="-" type="[object Object]">8x-8y=0</item>
+      <item id="3" inp1="8" inp2="8" inp3="0" sign="-" type="general">8x-8y=0</item>
+      <item id="4" inp1="5" inp2="8" inp3="0" sign="+" type="pendiente">y=5x+8</item>
+      <item id="4" inp1="5" inp2="3" inp3="7" sign="-" type="general">5x-3y=7</item>
     </rectas>
   </application>
 </geocalc>
